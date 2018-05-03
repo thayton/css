@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    height: 100vh;
+    font-family: Courier New
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    width: 260px;
+    background: silver;
+    padding: 10px;
+}
+
+.button {
+    display: inline-block;
+    text-align: center;
+    margin: 10px;
+    width: 40px;
+    height: 40px;
+    padding: 10px 0;
+    color: white;
+    border: 1px solid #505050;
+    background: gray;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.screen {
+    background: orange;
+    margin: 10px;
+    padding: 5px;
+    height: 60px;
+}
+
+.entry {
+    height: 60%;
+    font-size: 2em;
+    text-align: right;
+}
+
+.equation {
+    text-align: right;	  
+    margin-top: 5px;
+}
+
+#equals {
+    float: right;	  
+    height: 100px;
+    line-height: 78px;
+}
+
+#zero {
+    width: 100px;
+}
