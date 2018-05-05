@@ -3,6 +3,7 @@ var State = {
 };
 
 var MAX_PRECISION = 10;
+var MAX_DIGITS = 11;
 var state = State.INIT;
 var entry = document.getElementById('entry');
 var keypad = document.getElementById('keypad');
@@ -33,6 +34,15 @@ var clearEntry = () => {
 	
         displayEqn();	
     }
+};
+
+// User entered too many digits to fit on calculator screen
+// or the result is too large to fit on calculator screen
+var digitLimitMet = () => {
+    entry.innerText = '0';
+    eqn = [];    
+    equation.innerText = 'Digit Limit Met';
+    state = State.INIT;
 };
 
 var isOp = (op) => {
@@ -111,8 +121,13 @@ var handleEq = () => {
         }
     }
 
-    /* XXX check for digit limit met */    
     result = parseFloat(result.toPrecision(MAX_PRECISION));
+    
+    if (result.length > MAX_DIGITS) {
+	digitLimitMet();
+	return;
+    }
+    
     entry.innerText = result;
     
     eqn.push('=')
@@ -125,15 +140,25 @@ var handleEq = () => {
 
 /* number or '.' */
 var handleDigit = (txt) => {
-    if (state !== State.DIGIT && txt === '0') {
-        return;
-    }
-    
     if (state !== State.DIGIT) {
         entry.innerText = txt;
         eqn.push(txt);
     } else {
-        /* XXX check for digit limit met */
+	if (txt === '.' && entry.innerText.indexOf('.') !== -1) {
+	    // Can't have multiple decimal points 
+	    return;
+	}
+
+	if (txt === '0' && entry.innerText === '0') {
+	    // Don't display multiple zeros */
+	    return;
+	}
+	
+	if (entry.innerText.length === MAX_DIGITS) {
+	    digitLimitMet();
+	    return;
+	}
+	
         entry.innerText += txt;
         eqnAppendToLast(txt);
     }
@@ -143,6 +168,7 @@ var handleDigit = (txt) => {
     state = State.DIGIT;    
 };
 
+// XXX Add keyboard support for numbers
 keypad.onclick = function(event) {
     var txt = event.target.innerText;
     var num = parseInt(txt);
