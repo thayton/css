@@ -1,3 +1,4 @@
+// Handle divide by zero
 var State = {
     INIT: 0, DIGIT: 1, OP: 2, RESULT: 3
 };
@@ -187,3 +188,39 @@ keypad.onclick = function(event) {
         handleDigit(txt);
     }
 };
+
+window.addEventListener('keydown', function(event) {
+    if (event.defaultPrevented) {
+	return; // Do nothing if the event was already processed
+    }
+    
+    console.log('key = ' + event.key + ' type ' + typeof(event.key));
+
+    switch (event.key) {
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
+    case 'Decimal':
+	handleDigit(event.key);
+	break;
+	
+    case '+': case '-': case 'X': case '%':
+	handleOp(event.key);
+	break;
+
+    case '=': case 'Enter':
+	handleEq('=');
+	break;
+
+    case 'Clear': case 'Backspace':
+	clearEntry();
+	break;
+	
+    default:
+	return; // Quit when this doesn't handle the key event.
+    }
+
+    // Cancel the default action to avoid it being handled twice
+    event.preventDefault();
+}, true);
+// the last option dispatches the event to the listener first,
+// then dispatches event to window
