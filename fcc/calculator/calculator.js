@@ -1,84 +1,14 @@
+const MAX_PRECISION = 10;
+const MAX_DIGITS_SCREEN_TOP = 11;
+const MAX_DIGITS_SCREEN_BOTTOM = 11;
+
 // Handle divide by zero
-var State = {
+const State = {
     INIT: 0, DIGIT: 1, OP: 2, RESULT: 3
 };
 
-var MAX_PRECISION = 10;
-var MAX_DIGITS = 11;
-var state = State.INIT;
-var entry = document.getElementById('entry');
-var keypad = document.getElementById('keypad');
-var equation = document.getElementById('equation');
-var eqn = []; // list of numbers, operators
-    
-var allClear = () => {
-    state = State.INIT;    
-    entry.innerText = '0';
-
-    eqn = [];
-    displayEqn();
-};
-
-var clearEntry = () => {
-    if (state === State.RESULT) {
-        allClear();
-    } else {
-        eqn.pop();
-
-	if (eqn.length === 0) {
-            entry.innerText = '0';	    	    
-            state = State.INIT;
-	} else {
-            entry.innerText = eqn[eqn.length - 1];	    
-	    state = isOp(eqn[eqn.length - 1]) ? State.OP : State.DIGIT;
-	}
-	
-        displayEqn();	
-    }
-};
-
-// User entered too many digits to fit on calculator screen
-// or the result is too large to fit on calculator screen
-var digitLimitMet = () => {
-    entry.innerText = '0';
-    eqn = [];    
-    equation.innerText = 'Digit Limit Met';
-    state = State.INIT;
-};
-
 var isOp = (op) => {
-    return [ '+', '-', 'X', '%' ].indexOf(op) !== -1;
-};
-
-var displayEqn = () => {
-    if (eqn.length === 0) {
-        equation.innerText = '0';
-        return;
-    }
-    
-    equation.innerText = '';
-    
-    for (var i = 0; i < eqn.length; i++) {
-        equation.innerText += eqn[i];
-    }
-};
-
-var eqnAppendToLast = (x) => {
-    if (eqn.length === 0) {
-        eqn[0] = x;
-    } else {
-        var n = eqn.length - 1;
-        eqn[n] += x;
-    }
-};
-
-var handleOp = (op) => {
-    if (state === State.DIGIT || state === State.RESULT) {
-        state = State.OP;       
-        entry.innerText = op;
-        eqn.push(op);   
-        displayEqn();
-    }
+    return [ '+', '-', '*', '%' ].indexOf(op) !== -1;
 };
 
 var doOp = (x, op, y) => {
@@ -91,7 +21,7 @@ var doOp = (x, op, y) => {
         x -= y;  
         break;
         
-    case 'X':
+    case '*':
         x *= y;
         break;
         
@@ -103,89 +33,198 @@ var doOp = (x, op, y) => {
     return x;
 };
 
-var handleEq = () => {
-    var result;
-    var lastOp;
-
-    if (state !== State.DIGIT) {
-        return;
-    }
-    
-    result = parseFloat(eqn[0]);
-
-    /* reduce */
-    for (var i = 1; i < eqn.length; i++) {
-        if (isOp(eqn[i])) {
-            lastOp = eqn[i];
-        } else {
-            result = doOp(result, lastOp, parseFloat(eqn[i]));
-        }
+class Screen {
+    constructor(screenTopId, screenBottomId) {
+	this.top = document.getElementById(screenTopId);
+	this.bottom = document.getElementById(screenBottomId);
     }
 
-    result = parseFloat(result.toPrecision(MAX_PRECISION));
-    
-    if (result.length > MAX_DIGITS) {
-	digitLimitMet();
-	return;
+    updateTop(text) {
+	this.top.innerText = text;
     }
-    
-    entry.innerText = result;
-    
-    eqn.push('=')
-    eqn.push(result);    
-    displayEqn();
-    
-    eqn = [ result ];
-    state = State.RESULT;
-};
 
-/* number or '.' */
-var handleDigit = (txt) => {
-    if (state !== State.DIGIT) {
-        entry.innerText = txt;
-        eqn.push(txt);
-    } else {
-	if (txt === '.' && entry.innerText.indexOf('.') !== -1) {
-	    // Can't have multiple decimal points 
-	    return;
-	}
+    updateBottom(text) {
 
-	if (txt === '0' && entry.innerText === '0') {
-	    // Don't display multiple zeros */
-	    return;
-	}
+    }
+
+    clearTop() {
+
+    }
+
+    clearBottom() {
+
+    }
+}
+
+class Calculator {
+    constructor (entryId, keypadId, equationId) {
+	this.state = State.INIT;
+	this.entry = document.getElementById(entryId);//ui
+	this.keypad = document.getElementById(keypadId); //ui	
+	this.equation = document.getElementById(equationId); //ui
+	this.eqn = [];
+    }
+
+    allClear() {
+	this.state = State.INIT;    
+	this.entry.innerText = '0';
+
+	this.eqn = [];
+	this.displayEqn();
+    }
+
+    clearEntry() {
+	if (this.state === State.RESULT) {
+            this.allClear();
+	} else {
+            this.eqn.pop();
+
+	    if (this.eqn.length === 0) {
+		this.entry.innerText = '0';	    	    
+		this.state = State.INIT;
+	    } else {
+		this.entry.innerText = this.eqn[this.eqn.length - 1];	    
+		this.state = isOp(this.eqn[this.eqn.length - 1]) ? State.OP : State.DIGIT;
+	    }
 	
-	if (entry.innerText.length === MAX_DIGITS) {
-	    digitLimitMet();
-	    return;
+            this.displayEqn();	
 	}
-	
-        entry.innerText += txt;
-        eqnAppendToLast(txt);
     }
 
-    displayEqn();
+    // User entered too many digits to fit on calculator screen
+    // or the result is too large to fit on calculator screen
+    digitLimitMet() {
+	this.entry.innerText = '0';
+	this.eqn = [];    
+	this.equation.innerText = 'Digit Limit Met';
+	this.state = State.INIT;
+    }
+
+    displayEqn() {
+	if (this.eqn.length === 0) {
+            equation.innerText = '0';
+	} else {
+	    equation.innerText = '';
     
-    state = State.DIGIT;    
-};
+	    for (var i = 0; i < this.eqn.length; i++) {
+		this.equation.innerText += this.eqn[i];
+	    }
+	}
+    }
+
+    eqnAppendToLast(x) {
+	if (this.eqn.length === 0) {
+            this.eqn[0] = x;
+	} else {
+            var n = this.eqn.length - 1;
+            this.eqn[n] += x;
+	}
+    }
+
+    handleOp(op) {
+	if (this.state === State.DIGIT || this.state === State.RESULT) {
+            this.state = State.OP;       
+            this.entry.innerText = op;
+            this.eqn.push(op);   
+            this.displayEqn();
+	}
+    }
+
+    computeResult() {
+	let result;
+	let lastOp;
+
+	result = parseFloat(this.eqn[0]);
+
+	/* reduce */
+	for (var i = 1; i < this.eqn.length; i++) {
+            if (isOp(this.eqn[i])) {
+		lastOp = this.eqn[i];
+            } else {
+		result = doOp(result, lastOp, parseFloat(this.eqn[i]));
+            }
+	}
+
+	result = parseFloat(result.toPrecision(MAX_PRECISION));
+	return result;
+    }
+    
+    handleEq() {
+	let result;
+
+	if (this.state !== State.DIGIT) {
+            return;
+	}
+    
+	result = this.computeResult();
+	if (result.length > MAX_DIGITS_TOP_SCREEN) {
+	    this.digitLimitMet();
+	    return;
+	}
+    
+	this.entry.innerText = result;
+    
+	this.eqn.push('=')
+	this.eqn.push(result);    
+	this.displayEqn();
+    
+	this.eqn = [ result ];
+	this.state = State.RESULT;
+    }
+
+    /* number or '.' */
+    handleDigit(txt) {
+	if (this.state !== State.DIGIT) {
+            this.entry.innerText = txt;
+	    if (this.state !== State.RESULT) {
+		this.eqn.push(txt);
+	    } else {
+		this.eqn = [ txt ];
+	    }
+	} else {
+	    if (txt === '.' && this.entry.innerText.indexOf('.') !== -1) {
+		// Can't have multiple decimal points 
+		return;
+	    }
+
+	    if (txt === '0' && this.entry.innerText === '0') {
+		// Don't display multiple zeros */
+		return;
+	    }
+	
+	    if (this.entry.innerText.length === MAX_DIGITS_SCREEN_TOP) {
+		this.digitLimitMet();
+		return;
+	    }
+	
+            this.entry.innerText += txt;
+            this.eqnAppendToLast(txt);
+	}
+
+	this.displayEqn();
+	this.state = State.DIGIT;    
+    }
+}
+
+const calculator = new Calculator('entry', 'keypad', 'equation');
 
 // XXX Add keyboard support for numbers
 keypad.onclick = function(event) {
-    var txt = event.target.innerText;
-    var num = parseInt(txt);
+    let txt = event.target.innerText;
+    let num = parseInt(txt);
     
     if (Number.isNaN(num) && txt !== '.') {
         if (isOp(txt)) {
-            handleOp(txt);
+            calculator.handleOp(txt);
         } else if (txt === 'AC') {
-            allClear();
+            calculator.allClear();
         } else if (txt === 'CE') {
-            clearEntry();
+            calculator.clearEntry();
         } else if (txt === '=') {
-            handleEq();
+            calculator.handleEq();
         }
     } else {
-        handleDigit(txt);
+        calculator.handleDigit(txt);
     }
 };
 
@@ -194,25 +233,25 @@ window.addEventListener('keydown', function(event) {
 	return; // Do nothing if the event was already processed
     }
     
-    console.log('key = ' + event.key + ' type ' + typeof(event.key));
+    //console.log('key = ' + event.key + ' type ' + typeof(event.key));
 
     switch (event.key) {
     case '0': case '1': case '2': case '3': case '4':
     case '5': case '6': case '7': case '8': case '9':
     case 'Decimal':
-	handleDigit(event.key);
+	calculator.handleDigit(event.key);
 	break;
 	
-    case '+': case '-': case 'X': case '%':
-	handleOp(event.key);
+    case '+': case '-': case '*': case '%':
+	calculator.handleOp(event.key);
 	break;
 
     case '=': case 'Enter':
-	handleEq('=');
+	calculator.handleEq('=');
 	break;
 
     case 'Clear': case 'Backspace':
-	clearEntry();
+	calculator.clearEntry();
 	break;
 	
     default:
