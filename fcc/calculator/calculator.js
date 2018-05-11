@@ -1,14 +1,11 @@
+'use strict';
+
 const MAX_PRECISION = 2;
 const MAX_DIGITS_SCREEN_TOP = 11;
 const MAX_DIGITS_SCREEN_BOTTOM = 22;
 
-class TooManyDigitsError extends Error {};
+class TooManyDigitsError extends Error {}
 
-//
-// Bugs:
-// - Handle divide by zero
-// - Was able to enter 999 + 09999 on bottom screen
-//
 const State = {
     INIT: 0, DIGIT: 1, OP: 2, RESULT: 3
 };
@@ -102,7 +99,7 @@ class Calculator {
         }
 
         if (txt.length > MAX_DIGITS_SCREEN_BOTTOM) {
-	    throw new TooManyDigitsError();
+            throw new TooManyDigitsError();
         } else {
             this.screenBottom.innerText = txt;
         }
@@ -158,7 +155,7 @@ class Calculator {
             this.digitLimitMet();
             return;
         }
-    
+
         this.screenTop.innerText = result;
     
         this.equation.push('=')
@@ -180,6 +177,14 @@ class Calculator {
     /* number or '.' */
     handleDigit(txt) {
         if (this.state !== State.DIGIT) {
+            // Prevent divide by zero       
+            if (this.state === State.OP && txt === '0') {
+                n = this.equation.length - 1;
+                if (this.equation[n] === '%') {
+                    return;
+                }
+            }
+            
             this.screenTop.innerText = txt;
 
             // If user enters a digit from the RESULT state
@@ -187,7 +192,7 @@ class Calculator {
             // and overwrite the existing one.
             if (this.state === State.RESULT) {
                 this.equation = [ txt ];                
-            } else { // INIT or OP
+            } else { 
                 this.equation.push(txt);
             }
         } else {
@@ -232,7 +237,6 @@ class Calculator {
 
 const calculator = new Calculator('screen-top', 'keypad', 'screen-bottom');
 
-// XXX Add keyboard support for numbers
 keypad.onclick = function(event) {
     let txt = event.target.innerText;
     let num = parseInt(txt);
