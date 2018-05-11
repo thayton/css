@@ -1,10 +1,13 @@
 // Handle divide by zero
+// Handle equation display digit limit met
+
 var State = {
     INIT: 0, DIGIT: 1, OP: 2, RESULT: 3
 };
 
 var MAX_PRECISION = 10;
-var MAX_DIGITS = 11;
+var ENTRY_MAX_DIGITS = 11;
+var EQUATION_MAX_DIGITS = 11;
 var state = State.INIT;
 var entry = document.getElementById('entry');
 var keypad = document.getElementById('keypad');
@@ -47,7 +50,7 @@ var digitLimitMet = () => {
 };
 
 var isOp = (op) => {
-    return [ '+', '-', 'X', '%' ].indexOf(op) !== -1;
+    return [ '+', '-', '*', '%' ].indexOf(op) !== -1;
 };
 
 var displayEqn = () => {
@@ -91,7 +94,7 @@ var doOp = (x, op, y) => {
         x -= y;  
         break;
         
-    case 'X':
+    case '*':
         x *= y;
         break;
         
@@ -124,7 +127,7 @@ var handleEq = () => {
 
     result = parseFloat(result.toPrecision(MAX_PRECISION));
     
-    if (result.length > MAX_DIGITS) {
+    if (result.length > ENTRY_MAX_DIGITS) {
 	digitLimitMet();
 	return;
     }
@@ -203,7 +206,7 @@ window.addEventListener('keydown', function(event) {
 	handleDigit(event.key);
 	break;
 	
-    case '+': case '-': case 'X': case '%':
+    case '+': case '-': case '*': case '%':
 	handleOp(event.key);
 	break;
 
