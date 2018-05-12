@@ -3,7 +3,7 @@ let timerActive = false;
 let ticks = 0;
 
 const SECONDS_PER_MINUTE = 60;
-const MS_PER_TICK = 10;
+const MS_PER_TICK = 100;
 const MS_PER_SECOND = 1000;
 const TICKS_PER_SECOND = (MS_PER_SECOND / MS_PER_TICK);
 
@@ -91,7 +91,7 @@ wrapper.onclick = (event) => {
         if (timerActive) {
             startTimer();
         } else {
-            clearInterval(timer);
+            clearInterval(intervalTimer);
         }
     }
 
