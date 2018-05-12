@@ -1,0 +1,77 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    position: relative; /* establish containing block */
+    height: 100vh;
+    font-family: Lato;
+    font-weight: 400;
+}
+
+.container {
+    position: absolute; /* relative to body */
+    width: 400px;
+    top: 50%;
+    left: 50%;
+    border: 1px solid black;
+    transform: translate(-50%, -50%);
+}
+
+div#break-length-panel {
+    width: 180px;
+    border: 1px solid blue;
+    float: left;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+div#session-length-panel {
+    width: 160px;
+    border: 1px solid blue;
+    float: right;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+    text-transform: uppercase;    
+}
+
+div#timer {
+    clear: both;
+    border: 1px solid green;
+    text-align: center;
+    font-size: 4em;
+}
+
+div#timer:hover {
+    cursor: pointer;
+}
+
+div#progress-bar {
+    border: 1px solid red;
+    margin: 2px 0;
+    height: 40px; 
+}
+
+.progress {
+    background-color: red;
+    height: 40px;
+    width: 0%;
+}
+
+.minus {
+    padding: 2px;
+    color: red;
+}
+
+.plus {
+    padding: 2px;
+    color: blue;
+}
+
+.plus:hover,
+.minus:hover {
+    cursor: pointer;
+}
