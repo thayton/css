@@ -1,4 +1,4 @@
-let timer;
+let intervalTimer;
 let timerActive = false;
 let ticks = 0;
 
@@ -54,15 +54,13 @@ var updateProgressBar = (currTimeSec, currTimeMsec) => {
 };
 
 var updateTimerDisplay = (timeInSeconds) => {
-    let timerElem = document.getElementById('timer');    
-    timerElem.dataset.seconds = timeInSeconds;
-    timerElem.innerText = secondsToHMS(timeInSeconds)
+    timer.dataset.seconds = timeInSeconds;
+    timer.innerText = secondsToHMS(timeInSeconds)
 };
 
 var tick = () => {
     if (timerActive) {
-        let timerElem = document.getElementById('timer');           
-        let n = parseInt(timerElem.dataset.seconds);
+        let n = parseInt(timer.dataset.seconds);
 
         if ((++ticks % TICKS_PER_SECOND) !== 0) {
             updateProgressBar(n, ticks * MS_PER_TICK);
@@ -84,7 +82,7 @@ var tick = () => {
 };
 
 var startTimer = () => {
-    timer = setInterval(tick, MS_PER_TICK);
+    intervalTimer = setInterval(tick, MS_PER_TICK);
 };
 
 wrapper.onclick = (event) => {
@@ -97,49 +95,54 @@ wrapper.onclick = (event) => {
         }
     }
 
-    if (event.target.innerText === '+') {
+    if (event.target.innerText === '+' ||
+        event.target.innerText === '-') {
         let id;
+        let prefix;
         let parentId = event.target.parentElement.id;
+
+        if (timerActive) {
+            // Timer has to be paused to update session/break times
+            return;
+        }
         
         if (event.target.parentElement.id === 'break-length-controls') {
-            id = 'break-length';
+            prefix = 'break';
         } else if (event.target.parentElement.id === 'session-length-controls') {
-            id = 'session-length';
+            prefix = 'session';
         } else {
             return;
         }
+
+        id = prefix + '-length';
         
         let e = window[id];
-        let n = parseInt(e.innerText) + 1;
+        let n;
+
+        if (event.target.innerText === '+') {
+            n = parseInt(e.innerText) + 1;
+        } else {
+            n = parseInt(e.innerText) - 1;
+        }
+
+        if (n <= 0) {
+            return;
+        }
 
         e.innerText = n;
-        updateTimerDisplay(n * SECONDS_PER_MINUTE);
+        
+        // The timer only gets updated if the controls pressed
+        // match the current state. Eg, the current state is
+        // Session and the +/- for session got pressed.
+        if (prefix === states[state]) {
+            updateTimerDisplay(n * SECONDS_PER_MINUTE);
+        }
     }
-
-    if (event.target.innerText === '-') {
-        let id;
-        let parentId = event.target.parentElement.id;
-        
-        if (parentId === 'break-length-controls') {
-            id = 'break-length';
-        } else if (parentId === 'session-length-controls') {
-            id = 'session-length';          
-        } else {
-            return;
-        }
-        
-        let e = window[id];
-        let n = parseInt(e.innerText) - 1;
-
-        e.innerText = n;
-        updateTimerDisplay(n * SECONDS_PER_MINUTE);     
-    }    
 };
 
 wrapper.onload = () => {
     let minutes = parseInt(window['session-length'].innerText);
     let seconds = minutes * SECONDS_PER_MINUTE;
 
-    timer.dataset.seconds = seconds;
-    timer.innerText = secondsToHMS(seconds);
+    updateTimerDisplay(seconds);
 };
