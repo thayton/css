@@ -1,7 +1,12 @@
 let timer;
 let timerActive = false;
+let ticks = 0;
 
 const SECONDS_PER_MINUTE = 60;
+const MS_PER_TICK = 10;
+const MS_PER_SECOND = 1000;
+const TICKS_PER_SECOND = (MS_PER_SECOND / MS_PER_TICK);
+
 const states = ['session', 'break'];
 let state = 0;
 
@@ -25,7 +30,7 @@ var secondsToHMS = (totalSeconds) => {
     return hours+':'+minutes+':'+seconds;    
 };
 
-var getTimerLength = (idPrefix) => {
+var getTimerVal = (idPrefix) => {
     let id = idPrefix + '-length';
     let e = window[id];
     let n = parseInt(e.innerText);
@@ -33,14 +38,18 @@ var getTimerLength = (idPrefix) => {
     return n * SECONDS_PER_MINUTE;
 };
 
-var updateProgressBar = () => {
-    let timerStartingValue = getTimerLength(states[state]);
-    let timerElem = document.getElementById('timer');
-    let curr = parseInt(timerElem.dataset.seconds);
-    let diff = timerStartingValue - curr;
-    let perc = Math.ceil( (diff / timerStartingValue) * 100 ); 
+var updateProgressBar = (currTimeSec, currTimeMsec) => {
+    let timerStartingValue = getTimerVal(states[state]);
+    let diff = timerStartingValue - currTimeSec;
+    let perc = (diff / timerStartingValue) * 100; 
     let progressBar = document.querySelector('div#progress-bar > div.progress');
 
+    perc += ((currTimeMsec / MS_PER_SECOND) / timerStartingValue) * 100;
+    perc = parseFloat(perc.toFixed(2));
+
+    if (perc > 100)
+        perc = 100;
+    
     progressBar.style.width = perc + '%';
 };
 
@@ -54,26 +63,31 @@ var tick = () => {
     if (timerActive) {
         let timerElem = document.getElementById('timer');           
         let n = parseInt(timerElem.dataset.seconds);
+
+        if ((++ticks % TICKS_PER_SECOND) !== 0) {
+            updateProgressBar(n, ticks * MS_PER_TICK);
+            return;
+        }
+
+        ticks = 0;
         
         if (n === 0) {
             state = state ^ 1;
-            n = getTimerLength(states[state]);
+            n = getTimerVal(states[state]);
         } else {
             n--;
         }
 
         updateTimerDisplay(n);
-        updateProgressBar();
+        updateProgressBar(n, ticks * MS_PER_TICK);
     }
 };
 
 var startTimer = () => {
-    timer = setInterval(tick, 1000);
+    timer = setInterval(tick, MS_PER_TICK);
 };
 
 wrapper.onclick = (event) => {
-    console.log(event);
-
     if (event.target.id === 'timer') {
         timerActive = timerActive ? false : true;
         if (timerActive) {
