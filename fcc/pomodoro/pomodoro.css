@@ -4,11 +4,6 @@
     box-sizing: border-box;
 }
 
-/* get rid of annoying blue highlighting when clicking */
-:focus {
-    outline: none !important;
-}
-
 .clearfix::after {
     content: "";
     display: table;
@@ -126,6 +121,7 @@ div#progress-bar {
     cursor: pointer;
 }
 
+/* get rid of annoying blue highlighting when clicking */
 .timer-settings {
     -webkit-user-select: none; /* Chrome/Safari */        
     -moz-user-select: none; /* Firefox */
@@ -135,3 +131,8 @@ div#progress-bar {
     -o-user-select: none;
     user-select: none;
 }
+
+:focus {
+    outline: none !important;
+}
+

@@ -8,7 +8,7 @@ const MS_PER_SECOND = 1000;
 const TICKS_PER_SECOND = (MS_PER_SECOND / MS_PER_TICK);
 
 const states = ['session', 'break'];
-let state = 0;
+let currentState = 0;
 
 var secondsToHMS = (totalSeconds) => {
     var hours   = Math.floor(totalSeconds / 3600);
@@ -41,7 +41,7 @@ var getTimerLen = (idPrefix) => {
 // Time left is a floating point value of seconds.milliseconds
 // that corresponds to how much time is left on the clock
 var updateProgressBar = (timeLeft) => {
-    let timerStartingValue = getTimerLen(states[state]);
+    let timerStartingValue = getTimerLen(states[currentState]);
     let diff = timerStartingValue - timeLeft;
     let perc = (diff / timerStartingValue) * 100; 
     let progressBar = document.querySelector('div#progress-bar > div.progress');    
@@ -73,8 +73,8 @@ var tick = () => {
             
             if (timeLeft === 0) {
                 // Timer finished
-                state = state ^ 1;
-                timeLeft = getTimerLen(states[state]);
+                currentState = currentState ^ 1;
+                timeLeft = getTimerLen(states[currentState]);
 
                 // Toggle the active panel
                 document.querySelector('.session-panel').classList.toggle('active');
@@ -93,7 +93,7 @@ var startTimer = () => {
     intervalTimer = setInterval(tick, MS_PER_TICK);
 };
 
-document.querySelector('.wrapper').onclick = (event) => {
+document.querySelector('#timer').onclick = (event) => {
     if (event.target.id === 'timer') {
         timerActive = timerActive ? false : true;
         if (timerActive) {
@@ -102,48 +102,40 @@ document.querySelector('.wrapper').onclick = (event) => {
             clearInterval(intervalTimer);
         }
     }
+};
 
+// Update the Session/Break timer lengths
+var updateTimerLen = (elem, op) => {
+    let n;
+
+    if (op === '+') {
+        n = parseInt(elem.innerText) + 1;
+    } else {
+        n = parseInt(elem.innerText) - 1;
+    }
+
+    if (n <= 0 || n > 99) {
+        return;
+    }
+
+    elem.innerText = n;
+        
+    // The timer only gets updated if the controls pressed
+    // match the current state. Eg, the current state is
+    // Session and the +/- for session got pressed.
+    if (elem.dataset.state === states[currentState]) {
+        updateTimerDisplay(n * SECONDS_PER_MINUTE);
+    }
+};
+
+document.querySelector('.wrapper').onclick = (event) => {
     if (event.target.innerText === '+' ||
         event.target.innerText === '-') {
-        let id;
-        let prefix;
-        let parentId = event.target.parentElement.id;
+        let op = event.target.innerText;        
+        let elem = window[event.target.dataset.state+'-length'];
 
-        if (timerActive) {
-            // Timer has to be paused to update session/break times
-            return;
-        }
-        
-        if (event.target.parentElement.id === 'break-length-controls') {
-            prefix = 'break';
-        } else if (event.target.parentElement.id === 'session-length-controls') {
-            prefix = 'session';
-        } else {
-            return;
-        }
-
-        id = prefix + '-length';
-        
-        let e = window[id];
-        let n;
-
-        if (event.target.innerText === '+') {
-            n = parseInt(e.innerText) + 1;
-        } else {
-            n = parseInt(e.innerText) - 1;
-        }
-
-        if (n <= 0 || n > 99) {
-            return;
-        }
-
-        e.innerText = n;
-        
-        // The timer only gets updated if the controls pressed
-        // match the current state. Eg, the current state is
-        // Session and the +/- for session got pressed.
-        if (prefix === states[state]) {
-            updateTimerDisplay(n * SECONDS_PER_MINUTE);
+        if (!timerActive) {
+            updateTimerLen(elem, op);
         }
     }
 };
