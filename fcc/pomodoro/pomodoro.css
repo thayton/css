@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+/* get rid of annoying blue highlighting when clicking */
+:focus {
+    outline: none !important;
+}
+
 .clearfix::after {
     content: "";
     display: table;
@@ -119,4 +124,14 @@ div#progress-bar {
 .plus:hover,
 .minus:hover {
     cursor: pointer;
+}
+
+.timer-settings {
+    -webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+
+    /* Rules below not implemented in browsers yet */
+    -o-user-select: none;
+    user-select: none;
 }
