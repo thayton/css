@@ -133,7 +133,7 @@ document.querySelector('.wrapper').onclick = (event) => {
             n = parseInt(e.innerText) - 1;
         }
 
-        if (n <= 0) {
+        if (n <= 0 || n > 99) {
             return;
         }
 
