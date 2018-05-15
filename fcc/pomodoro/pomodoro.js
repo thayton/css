@@ -3,7 +3,7 @@ let timerActive = false;
 let ticks = 0;
 
 const SECONDS_PER_MINUTE = 60;
-const MS_PER_TICK = 100;
+const MS_PER_TICK = 10;
 const MS_PER_SECOND = 1000;
 const TICKS_PER_SECOND = (MS_PER_SECOND / MS_PER_TICK);
 
@@ -30,7 +30,7 @@ var secondsToHMS = (totalSeconds) => {
     return hours+':'+minutes+':'+seconds;    
 };
 
-var getTimerVal = (idPrefix) => {
+var getTimerLen = (idPrefix) => {
     let id = idPrefix + '-length';
     let e = window[id];
     let n = parseInt(e.innerText);
@@ -38,18 +38,19 @@ var getTimerVal = (idPrefix) => {
     return n * SECONDS_PER_MINUTE;
 };
 
-var updateProgressBar = (currTimeSec, currTimeMsec) => {
-    let timerStartingValue = getTimerVal(states[state]);
-    let diff = timerStartingValue - currTimeSec;
+// Time left is a floating point value of seconds.milliseconds
+// that corresponds to how much time is left on the clock
+var updateProgressBar = (timeLeft) => {
+    let timerStartingValue = getTimerLen(states[state]);
+    let diff = timerStartingValue - timeLeft;
     let perc = (diff / timerStartingValue) * 100; 
-    let progressBar = document.querySelector('div#progress-bar > div.progress');
+    let progressBar = document.querySelector('div#progress-bar > div.progress');    
 
-    perc += ((currTimeMsec / MS_PER_SECOND) / timerStartingValue) * 100;
     perc = parseFloat(perc.toFixed(2));
 
     if (perc > 100)
         perc = 100;
-    
+
     progressBar.style.width = perc + '%';
 };
 
@@ -60,24 +61,27 @@ var updateTimerDisplay = (timeInSeconds) => {
 
 var tick = () => {
     if (timerActive) {
-        let n = parseInt(timer.dataset.seconds);
+        let timeLeft = parseInt(timer.dataset.seconds);
 
         if ((++ticks % TICKS_PER_SECOND) !== 0) {
-            updateProgressBar(n, ticks * MS_PER_TICK);
-            return;
-        }
-
-        ticks = 0;
-        
-        if (n === 0) {
-            state = state ^ 1;
-            n = getTimerVal(states[state]);
+            let msElapsed = ticks * MS_PER_TICK;
+            timeLeft -= (msElapsed / MS_PER_SECOND);
+            updateProgressBar(timeLeft);
         } else {
-            n--;
-        }
+            // One second has passed - Reset ticks
+            ticks = 0;
+            
+            if (timeLeft === 0) {
+                // Timer finished
+                state = state ^ 1;
+                timeLeft = getTimerVal(states[state]);
+            } else {
+                timeLeft--;
+            }
 
-        updateTimerDisplay(n);
-        updateProgressBar(n, ticks * MS_PER_TICK);
+            updateTimerDisplay(timeLeft);
+            updateProgressBar(timeLeft);
+        }
     }
 };
 
@@ -85,7 +89,7 @@ var startTimer = () => {
     intervalTimer = setInterval(tick, MS_PER_TICK);
 };
 
-wrapper.onclick = (event) => {
+document.querySelector('.wrapper').onclick = (event) => {
     if (event.target.id === 'timer') {
         timerActive = timerActive ? false : true;
         if (timerActive) {
@@ -140,7 +144,7 @@ wrapper.onclick = (event) => {
     }
 };
 
-wrapper.onload = () => {
+document.querySelector('.wrapper').onload = () => {
     let minutes = parseInt(window['session-length'].innerText);
     let seconds = minutes * SECONDS_PER_MINUTE;
 
