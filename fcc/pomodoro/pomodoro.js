@@ -74,7 +74,11 @@ var tick = () => {
             if (timeLeft === 0) {
                 // Timer finished
                 state = state ^ 1;
-                timeLeft = getTimerVal(states[state]);
+                timeLeft = getTimerLen(states[state]);
+
+                // Toggle the active panel
+                document.querySelector('.session-panel').classList.toggle('active');
+                document.querySelector('.break-panel').classList.toggle('active');
             } else {
                 timeLeft--;
             }

@@ -31,7 +31,8 @@ body {
     overflow: hidden; /* ??? */    
 }
 
-.panel {
+.break-panel,
+.session-panel {
     width: 50%;
     float: left;
     height: 300px;
