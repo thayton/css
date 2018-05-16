@@ -42,7 +42,7 @@ let highlightWinningMove = (winningMove) => {
     });
 };
 
-let didPlayerWin = (boxNum) => {
+let playerWon = (boxNum) => {
     let i;
     let s = players[currentPlayer].repeat(3);
 
@@ -53,11 +53,6 @@ let didPlayerWin = (boxNum) => {
     }
 
     if (i < winningMoves.length) {
-        // Highlight the winning boxes
-        // Record score
-        // Start next game
-        
-        console.log("Winning move");
         highlightWinningMove(i);
         return true;
     }
@@ -79,7 +74,13 @@ document.querySelector('.wrapper').onclick = (event) => {
             players[currentPlayer]
         );
 
-        didPlayerWin(boxNum);
-        currentPlayer ^= 1;
+        // Check if boxes are all full - no next move
+        if (playerWon(boxNum)) {
+            // Highlight the winning boxes
+            // Record score
+            // Start next game
+        } else {
+            currentPlayer ^= 1;
+        }
     }
 };
