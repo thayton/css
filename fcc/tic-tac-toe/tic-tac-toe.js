@@ -19,6 +19,20 @@ let winningMoves = [
     [ 6, 7, 8 ]
 ];
 
+let init = () => {
+    let i;
+    for (i = 0; i < 9; i++) {
+        let [r,c] = getRowCol(i);
+        let e = document.querySelector(`.box${i}`);
+
+        e.classList.remove('x');
+        e.classList.remove('o');
+        e.style.background = 'none';
+        
+        grid[r][c] = '';
+    }
+};
+
 let getRowCol = (boxNum) => {
     let rowCol = [ parseInt(boxNum / 3), boxNum % 3 ];
     return rowCol;
@@ -76,9 +90,9 @@ document.querySelector('.wrapper').onclick = (event) => {
 
         // Check if boxes are all full - no next move
         if (playerWon(boxNum)) {
-            // Highlight the winning boxes
             // Record score
             // Start next game
+            setTimeout(init, 3000);
         } else {
             currentPlayer ^= 1;
         }
