@@ -100,13 +100,7 @@ let getBestMove = (sym) => {
 // Find and return the index of any open square in the grid
 // where we can make a move. -1 indidates the grid is full!
 let findOpenSquare = () => {
-    for (let i = 0; i < grid.length; i++) {
-        if (grid[i] === '') {
-            return i;
-        }
-    }
-
-    return -1;
+    return grid.findIndex(e => e === '');
 };
 
 let isStalemate = () => {
