@@ -18,7 +18,7 @@ body {
     overflow: hidden;
 }
 
-.box {
+.square {
     border: 1px solid black;
     float: left;
     width: 33%;
@@ -26,19 +26,19 @@ body {
     position: relative;
 }
 
-.box0, .box1, .box2 {
+.square0, .square1, .square2 {
     border-top: 0;
 }
 
-.box0, .box3, .box6 {
+.square0, .square3, .square6 {
     border-left: 0;
 }
 
-.box6, .box7, .box8 {
+.square6, .square7, .square8 {
     border-bottom: 0;
 }
 
-.box2, .box5, .box8 {
+.square2, .square5, .square8 {
     border-right: 0;
 }
 
