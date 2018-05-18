@@ -28,7 +28,7 @@ body {
     font-weight: 300;
 }
 
-.name {
+.name, .reset {
     padding-bottom: 5px;    
     border-bottom: 1px solid silver;
 }
@@ -72,10 +72,6 @@ body {
     text-align: center;
 }
 
-div#choose-num-players {
-    display: none;
-}
-
 .choice {
     float: left;
     width: 50%;
@@ -86,12 +82,16 @@ div#choose-num-players {
     text-align: center;
 }
 
+div#choose-num-players {
+    display: none;
+}
+
 div#choose-sym {
     display: none;
 }
 
 div#gameboard {
-    /*display: none;*/
+    display: none;
 }
 
 .square {
@@ -150,21 +150,6 @@ div#gameboard {
     border-radius: 50%;
 }
 
-/* get rid of annoying blue highlighting when clicking */
-.num-players {
-    -webkit-user-select: none; /* Chrome/Safari */        
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+ */
-
-    /* Rules below not implemented in browsers yet */
-    -o-user-select: none;
-    user-select: none;
-}
-
-:focus {
-    outline: none !important;
-}
-
 .button {
    -webkit-user-select: none; /* Chrome/Safari */        
    -moz-user-select: none; /* Firefox */
@@ -173,6 +158,10 @@ div#gameboard {
    /* Rules below not implemented in browsers yet */
    -o-user-select: none;
    user-select: none;    
+}
+
+:focus {
+    outline: none !important;
 }
 
 .button:hover {

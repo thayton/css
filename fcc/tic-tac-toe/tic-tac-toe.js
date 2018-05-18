@@ -194,3 +194,28 @@ document.querySelector('#grid').onclick = (event) => {
     }
 };
 
+let reset = () => {
+    document.getElementById('choose-num-players').style.display = 'block';
+    document.getElementById('choose-sym').style.display = 'none';
+    document.getElementById('gameboard').style.display = 'none';
+};
+
+document.querySelector('.reset').onclick = (event) => {
+    reset();
+};
+
+document.body.onload = () => {
+    reset();
+};
+
+document.getElementById('choose-num-players').onclick = (event) => {
+    document.getElementById('choose-num-players').style.display = 'none';
+    document.getElementById('choose-sym').style.display = 'block';
+    document.getElementById('gameboard').style.display = 'none';
+};
+
+document.getElementById('choose-sym').onclick = (event) => {
+    document.getElementById('choose-num-players').style.display = 'none';
+    document.getElementById('choose-sym').style.display = 'none';
+    document.getElementById('gameboard').style.display = 'block';
+};
