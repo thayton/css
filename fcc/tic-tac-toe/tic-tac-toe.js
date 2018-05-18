@@ -1,3 +1,9 @@
+const CHOOSE_NUM_PLAYERS = 0;
+const CHOOSE_SYM         = 1;
+const GAME_ON            = 2;
+
+let state = CHOOSE_NUM_PLAYERS;
+
 let players = [ 'x', 'o' ];
 let currentPlayer = 0;
 let computersTurn = false;
@@ -173,7 +179,7 @@ let playerWon = () => {
     return false;
 };
 
-document.querySelector('.wrapper').onclick = (event) => {
+document.querySelector('#grid').onclick = (event) => {
     let elem = event.target;
     let squareNum = /\bsquare(\d+)\b/.exec(
         elem.getAttribute('class')
@@ -187,3 +193,4 @@ document.querySelector('.wrapper').onclick = (event) => {
         }
     }
 };
+
