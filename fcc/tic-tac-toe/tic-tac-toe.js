@@ -116,7 +116,7 @@ let isStalemate = () => {
 
 let gameIsOver = () => {
     if (playerWon()) {
-        // Record score
+        updateScore();
         // Start next game
         gameOn = false;
         setTimeout(init, 3000);
@@ -192,6 +192,13 @@ document.querySelector('#grid').onclick = (event) => {
             nextPlayer();
         }
     }
+};
+
+let updateScore = () => {
+    let elem = document.querySelector(
+        `.player${currentPlayer + 1} .score`
+    );
+    elem.innerText = parseInt(elem.innerText) + 1;
 };
 
 let reset = () => {
