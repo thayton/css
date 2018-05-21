@@ -1,9 +1,3 @@
-const CHOOSE_NUM_PLAYERS = 0;
-const CHOOSE_SYM         = 1;
-const GAME_ON            = 2;
-
-let state = CHOOSE_NUM_PLAYERS;
-
 let players = [
     {
         sym: 'x',
@@ -147,20 +141,20 @@ let takeTurn = () => {
     }
 };
 
+// Computer is always Player 2
+let isComputersTurn = () => {
+    return numPlayers === 1 && currentPlayer === 1;
+};
+
 let nextPlayer = () => {
     let name;
     
+    currentPlayer ^= 1;
+    
     if (numPlayers === 1) {
-        if (computersTurn) {
-            computersTurn = false;
-            computersTurnTimer = null;
-        } else {
-            computersTurn = true;
-            computersTurnTimer = setTimeout(takeTurn, 1500);
-        }
+        computersTurnTimer = isComputersTurn() ? setTimeout(takeTurn, 1500) : null;
     }
 
-    currentPlayer ^= 1;
     name = players[currentPlayer].name;
     updateStatus(`${name}'s Turn`);    
 };
@@ -210,7 +204,7 @@ document.querySelector('#grid').onclick = (event) => {
         elem.getAttribute('class')
     )[1];
 
-    if (gameOn && !computersTurn && grid[squareNum] === '') {
+    if (gameOn && !isComputersTurn() && grid[squareNum] === '') {
         makeMove(players[currentPlayer].sym, squareNum);
         
         if (!gameIsOver()) {
@@ -230,6 +224,13 @@ let updateScore = () => {
     
     player1Score.innerText = players[0].score;
     player2Score.innerText = players[1].score;
+};
+
+let resetScore = () => {
+    players[0].score = 0;
+    players[1].score = 0;
+
+    updateScore();
 };
 
 // Go back to start of game where we choose number of players
@@ -281,10 +282,7 @@ document.getElementById('choose-sym').onclick = (event) => {
         document.getElementById('choose-sym').style.display = 'none';
         document.getElementById('gameboard').style.display = 'block';
 
-        players[0].score = 0;
-        players[1].score = 0;
-
-        updateScore();
+        resetScore();
         startNewGame();
     }
 };
