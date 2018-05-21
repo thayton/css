@@ -8,10 +8,12 @@ let players = [
     {
         sym: 'x',
         score: 0,
+        name: 'Player 1'
     },
     {
         sym: 'o',
-        score: 0
+        score: 0,
+        name: 'Player 2'        
     }
 ];
 
@@ -53,6 +55,9 @@ let startNewGame = () => {
         
         grid[i] = '';
     }
+
+    let name = players[currentPlayer].name;
+    updateStatus(`${name}'s Turn`);    
 };
 
 let getWinningMoveStrings = (i) => {
@@ -143,17 +148,21 @@ let takeTurn = () => {
 };
 
 let nextPlayer = () => {
+    let name;
+    
     if (numPlayers === 1) {
         if (computersTurn) {
             computersTurn = false;
             computersTurnTimer = null;
         } else {
             computersTurn = true;
-            computersTurnTimer = setTimeout(takeTurn, 1000);
+            computersTurnTimer = setTimeout(takeTurn, 1500);
         }
     }
-    
+
     currentPlayer ^= 1;
+    name = players[currentPlayer].name;
+    updateStatus(`${name}'s Turn`);    
 };
 
 // Return true if current player just won the game
@@ -168,7 +177,9 @@ let playerWon = () => {
     }
 
     if (i < winningMoves.length) {
+        let name = players[currentPlayer].name;
         highlightWinningMove(i);
+        updateStatus(`${name} wins`); 
         return true;
     }
     
@@ -184,7 +195,7 @@ let gameIsOver = () => {
         gameOn = false;
         setTimeout(startNewGame, 3000);
     } else if (isStalemate()) {            
-        console.log('Stalemate. Want to play again?');
+        updateStatus('Stalemate');
         gameOn = false;            
         setTimeout(startNewGame, 3000);
     }
@@ -206,6 +217,11 @@ document.querySelector('#grid').onclick = (event) => {
             nextPlayer();
         }
     }
+};
+
+let updateStatus = (status) => {
+    let elem = document.querySelector('.prompt .status');
+    elem.innerText = status;
 };
 
 let updateScore = () => {
@@ -237,6 +253,16 @@ document.getElementById('choose-num-players').onclick = (event) => {
         event.target.dataset.choice === '2') {
         
         numPlayers = parseInt(event.target.dataset.choice);
+
+        if (numPlayers === 1) {
+            players[1].name = 'Computer';
+            let player2 = document.querySelector('.player2 .name');
+            player2.innerText = players[1].name;
+        } else {
+            players[1].name = 'Player 2';
+            let player2 = document.querySelector('.player2 .name');
+            player2.innerText = players[1].name;
+        }
         
         document.getElementById('choose-num-players').style.display = 'none';
         document.getElementById('choose-sym').style.display = 'block';
