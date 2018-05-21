@@ -4,12 +4,22 @@ const GAME_ON            = 2;
 
 let state = CHOOSE_NUM_PLAYERS;
 
-let players = [ 'x', 'o' ];
+let players = [
+    {
+        sym: 'x',
+        score: 0,
+    },
+    {
+        sym: 'o',
+        score: 0
+    }
+];
+
+let numPlayers = 1;
 let currentPlayer = 0;
 let computersTurn = false;
 let computersTurnTimer = null;
 let gameOn = true;
-let numPlayers = 1;
 
 let grid = [
     '', '', '', // 0 1 2
@@ -28,7 +38,7 @@ let winningMoves = [
     [ 6, 7, 8 ]
 ];
 
-let init = () => {
+let startNewGame = () => {
     currentPlayer = 0;    
     computersTurn = false;
     computersTurnTimer = null;
@@ -114,19 +124,22 @@ let isStalemate = () => {
 };
 
 
-let gameIsOver = () => {
-    if (playerWon()) {
-        updateScore();
-        // Start next game
-        gameOn = false;
-        setTimeout(init, 3000);
-    } else if (isStalemate()) {            
-        console.log('Stalemate. Want to play again?');
-        gameOn = false;            
-        setTimeout(init, 3000);
+// Computer chooses next move
+let takeTurn = () => {
+    let mySym = players[currentPlayer].sym;
+    let myBestMove = getBestMove(mySym);
+    let theirSym = players[currentPlayer ^ 1].sym;
+    let theirBestMove = getBestMove(theirSym);
+
+    if (theirBestMove.movesLeft === 0 && myBestMove.movesLeft > 0) {
+        makeMove(mySym, theirBestMove.squareNum);
+    } else {
+        makeMove(mySym, myBestMove.squareNum);
     }
 
-    return !gameOn;
+    if (!gameIsOver()) {
+        nextPlayer();
+    }
 };
 
 let nextPlayer = () => {
@@ -143,27 +156,10 @@ let nextPlayer = () => {
     currentPlayer ^= 1;
 };
 
-// Computer chooses next move
-let takeTurn = () => {
-    let mySym = players[currentPlayer];
-    let myBestMove = getBestMove(mySym);
-    let theirSym = players[currentPlayer ^ 1];
-    let theirBestMove = getBestMove(theirSym);
-
-    if (theirBestMove.movesLeft === 0 && myBestMove.movesLeft > 0) {
-        makeMove(mySym, theirBestMove.squareNum);
-    } else {
-        makeMove(mySym, myBestMove.squareNum);
-    }
-
-    if (!gameIsOver()) {
-        nextPlayer();
-    }
-};
-
+// Return true if current player just won the game
 let playerWon = () => {
     let i;
-    let s = players[currentPlayer].repeat(3);
+    let s = players[currentPlayer].sym.repeat(3);
 
     for (i = 0; i < winningMoves.length; i++) {
         if (s == getWinningMoveStrings(i)) {
@@ -179,6 +175,24 @@ let playerWon = () => {
     return false;
 };
 
+let gameIsOver = () => {
+    if (playerWon()) {
+        players[currentPlayer].score++;
+        updateScore();
+        
+        // Start next game
+        gameOn = false;
+        setTimeout(startNewGame, 3000);
+    } else if (isStalemate()) {            
+        console.log('Stalemate. Want to play again?');
+        gameOn = false;            
+        setTimeout(startNewGame, 3000);
+    }
+
+    return !gameOn;
+};
+
+// Player has clicked on square to make a move
 document.querySelector('#grid').onclick = (event) => {
     let elem = event.target;
     let squareNum = /\bsquare(\d+)\b/.exec(
@@ -186,7 +200,7 @@ document.querySelector('#grid').onclick = (event) => {
     )[1];
 
     if (gameOn && !computersTurn && grid[squareNum] === '') {
-        makeMove(players[currentPlayer], squareNum);
+        makeMove(players[currentPlayer].sym, squareNum);
         
         if (!gameIsOver()) {
             nextPlayer();
@@ -195,18 +209,21 @@ document.querySelector('#grid').onclick = (event) => {
 };
 
 let updateScore = () => {
-    let elem = document.querySelector(
-        `.player${currentPlayer + 1} .score`
-    );
-    elem.innerText = parseInt(elem.innerText) + 1;
+    let player1Score = document.querySelector('.player1 .score');
+    let player2Score = document.querySelector('.player2 .score');
+    
+    player1Score.innerText = players[0].score;
+    player2Score.innerText = players[1].score;
 };
 
+// Go back to start of game where we choose number of players
 let reset = () => {
     document.getElementById('choose-num-players').style.display = 'block';
     document.getElementById('choose-sym').style.display = 'none';
     document.getElementById('gameboard').style.display = 'none';
 };
 
+// Restart game if player clicks reset
 document.querySelector('.reset').onclick = (event) => {
     reset();
 };
@@ -216,13 +233,32 @@ document.body.onload = () => {
 };
 
 document.getElementById('choose-num-players').onclick = (event) => {
-    document.getElementById('choose-num-players').style.display = 'none';
-    document.getElementById('choose-sym').style.display = 'block';
-    document.getElementById('gameboard').style.display = 'none';
+    if (event.target.dataset.choice === '1' ||
+        event.target.dataset.choice === '2') {
+        
+        numPlayers = parseInt(event.target.dataset.choice);
+        
+        document.getElementById('choose-num-players').style.display = 'none';
+        document.getElementById('choose-sym').style.display = 'block';
+        document.getElementById('gameboard').style.display = 'none';
+    }
 };
 
 document.getElementById('choose-sym').onclick = (event) => {
-    document.getElementById('choose-num-players').style.display = 'none';
-    document.getElementById('choose-sym').style.display = 'none';
-    document.getElementById('gameboard').style.display = 'block';
+    if (event.target.innerText === 'X' ||
+        event.target.innerText === 'O') {
+
+        players[0].sym = event.target.innerText.toLowerCase();
+        players[1].sym = players[0].sym === 'x' ? 'o': 'x';
+        
+        document.getElementById('choose-num-players').style.display = 'none';
+        document.getElementById('choose-sym').style.display = 'none';
+        document.getElementById('gameboard').style.display = 'block';
+
+        players[0].score = 0;
+        players[1].score = 0;
+
+        updateScore();
+        startNewGame();
+    }
 };
