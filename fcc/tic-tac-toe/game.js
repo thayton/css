@@ -78,9 +78,7 @@ export class Game {
 
         this.resetScore();        
         this.gameOn = true;
-        
-        let name = this.players[this.currentPlayer].name;
-        this.updateStatus(`${name}'s Turn`);    
+        this.displayStatus(this.players[this.currentPlayer].name + '\'s Turn');
     }
 
     isComputersTurn() {
@@ -95,7 +93,7 @@ export class Game {
         }        
     }
 
-    getPlayersMove() {
+    registerPlayersMoveHandler() {
         this.ui.grid.onclick = (event) => {
             let elem = event.target;
             let squareNum = /\bsquare(\d+)\b/.exec(
@@ -124,9 +122,7 @@ export class Game {
             }, 1500) : null;
         }
 
-        // XXX UI.status
-        let name = this.players[currentPlayer].name;
-        this.updateStatus(`${name}'s Turn`);    
+        this.displayStatus(this.players[currentPlayer].name + '\'s Turn');
     }
 
     // Return true if current player just won the game
@@ -141,9 +137,7 @@ export class Game {
         }
 
         if (i < winningMoves.length) {
-            let name = this.players[this.currentPlayer].name;
             highlightWinningMove(i);
-            updateStatus(`${name} wins`); 
             return true;
         }
     
@@ -156,17 +150,18 @@ export class Game {
 
     gameIsOver() {
         if (this.currentPlayerWon()) {
+            this.displayStatus(this.players[this.currentPlayer].name ' wins');
             this.players[this.currentPlayer].score++;
-            this.updateScore();
-        
-            // Start next game
+            this.displayScore();
             this.gameOn = false;
+            
             setTimeout(() => {
                 this.startNewGame(); // XXX this bound to Game
             }, 3000);
         } else if (this.isStalemate()) {            
-            this.updateStatus('Stalemate');
-            this.gameOn = false;            
+            this.displayStatus('Stalemate');
+            this.gameOn = false;
+            
             setTimeout(() => {
                 this.startNewGame(); // XXX this bound to Game
             }, 3000);
@@ -175,11 +170,11 @@ export class Game {
         return !this.gameOn;
     }
 
-    updateStatus(status) {
+    displayStatus(status) {
         this.ui.status.innerText = status;
     }
 
-    updateScore() {
+    displayScore() {
         this.ui.player1Score.innerText = this.players[0].score;
         this.ui.player2Score.innerText = this.players[1].score;
     }
@@ -188,7 +183,7 @@ export class Game {
         this.players[0].score = 0;
         this.players[1].score = 0;
 
-        this.updateScore();
+        this.displayScore();
     }
 }
 
