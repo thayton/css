@@ -1,4 +1,5 @@
 // TODO: https://www.neverstopbuilding.com/blog/2013/12/13/tic-tac-toe-understanding-the-minimax-algorithm13/
+
 export class ComputerPlayer {
     constructor(sym, grid, ui) {
         this.sym = sym;
@@ -54,9 +55,5 @@ export class ComputerPlayer {
             fillSquare(mySym, myBestMove.squareNum);
         }
 
-        // XXX this should go into Game code
-        if (!gameIsOver()) {
-            nextPlayer();
-        }
     }
 }

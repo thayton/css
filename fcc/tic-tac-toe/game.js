@@ -1,7 +1,7 @@
 import ComputerPlayer from './computer_player';
 
 export class Game {
-    constructor(ui, numPlayers, player1Sym, player2Sym) {
+    constructor(ui) {
         this.ui = ui;
         this.grid = [
             '', '', '', // 0 1 2
@@ -11,38 +11,74 @@ export class Game {
 
         this.players = [
             {
-                sym: player1Sym,
+                sym: null,
                 score: 0,
                 name: 'Player 1'
             },
             {
-                sym: player2Sym,
+                sym: null,
                 score: 0,
-                name: numPlayers === 1 ? 'Computer': 'Player 2';
+                name: 'Player 2'
             }
         ];
-
-        this.currentPlayer = 0;        
-        this.numPlayers = numPlayers;
-
-        if (numPlayers === 1) {
-            this.computerPlayer = new ComputerPlayer(player2Sym, grid, ui);
-            this.computersTurnTimer = null;            
-        }
 
         this.gameOn = false;
     }
 
+    chooseNumPlayers() {
+        this.ui.chooseNumPlayers.onclick = (event) => {
+            if (event.target.dataset.choice === '1' ||
+                event.target.dataset.choice === '2') {
+        
+                this.numPlayers = parseInt(event.target.dataset.choice);
+
+                if (this.numPlayers === 1) {
+                    this.ui.player2Name.innerText = players[1].name = 'Computer';
+                } else {
+                    this.ui.player2Name.innerText = players[1].name = 'Player 2';
+                }
+        
+                this.ui.chooseNumPlayers.style.display = 'none';
+                this.ui.chooseSym.style.display = 'block';
+                this.ui.gameboard.style.display = 'none';
+            }
+        }
+    }
+
+    chooseSymbol() {
+        this.ui.chooseSym.onclick = (event) => {
+            if (event.target.innerText === 'X' ||
+                event.target.innerText === 'O') {
+
+                this.players[0].sym = event.target.innerText.toLowerCase();
+                this.players[1].sym = players[0].sym === 'x' ? 'o': 'x';
+
+                if (this.numPlayers === 1) {
+                    this.computerPlayer = new ComputerPlayer(this.players[1].sym, this.grid, this.ui);
+                    this.computersTurnTimer = null;            
+                }
+                
+                this.ui.chooseNumPlayers.style.display = 'none';
+                this.ui.chooseSym.style.display = 'none';
+                this.ui.gameboard.style.display = 'block';
+
+                this.startNewGame();
+            }
+        };
+    }
+    
     startNewGame() {
         this.currentPlayer = 0;    
         this.computersTurnTimer = null; // clear any old timers?
-        this.gameOn = true;
 
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < this.grid.length; i++) {
             this.ui.clearSquare(i);
             this.grid[i] = '';
         }
 
+        this.resetScore();        
+        this.gameOn = true;
+        
         let name = this.players[this.currentPlayer].name;
         this.updateStatus(`${name}'s Turn`);    
     }
@@ -52,22 +88,45 @@ export class Game {
             this.currentPlayer === 1; // Computer is always Player 2
     }
 
+    computersTurn() {
+        this.computerPlayer.takeTurn(); 
+        if (this.gameIsOver() === false) {
+            this.nextPlayer();
+        }        
+    }
+
+    getPlayersMove() {
+        this.ui.grid.onclick = (event) => {
+            let elem = event.target;
+            let squareNum = /\bsquare(\d+)\b/.exec(
+                elem.getAttribute('class')
+            )[1];
+
+            if (this.gameOn && !this.isComputersTurn() && this.grid[squareNum] === '') {
+                let sym = this.players[this.currentPlayer].sym;
+
+                this.ui.fillSquare(squareNum, sym);
+                this.grid[squareNum] = sym;
+
+                if (!this.gameIsOver()) {
+                    this.nextPlayer();
+                }
+            }
+        }
+    }
+    
     nextPlayer() {
         this.currentPlayer ^= 1;
     
         if (this.numPlayers === 1) {
-            if (this.isComputersTurn()) {
-                this.computersTurnTimer = setTimeout(() => {
-                    this.computerPlayer.takeTurn(); // XXX this bound to Game!
-                }, 1500);
-            } else {
-                this.computersTurnTimer = null;
-            }
+            this.computersTurnTimer = this.isComputersTurn() ? setTimeout(() => {
+                this.computersTurn(); // XXX this bound to Game!
+            }, 1500) : null;
         }
 
         // XXX UI.status
         let name = this.players[currentPlayer].name;
-        updateStatus(`${name}'s Turn`);    
+        this.updateStatus(`${name}'s Turn`);    
     }
 
     // Return true if current player just won the game
@@ -130,26 +189,6 @@ export class Game {
         this.players[1].score = 0;
 
         this.updateScore();
-    },
-
-    playerMove() {
-        this.ui.grid.onclick = (event) => {
-            let elem = event.target;
-            let squareNum = /\bsquare(\d+)\b/.exec(
-                elem.getAttribute('class')
-            )[1];
-
-            if (this.gameOn && !this.isComputersTurn() && this.grid[squareNum] === '') {
-                let sym = this.players[this.currentPlayer].sym;
-
-                this.ui.fillSquare(squareNum, sym);
-                grid[squareNum] = sym;
-
-                if (!this.gameIsOver()) {
-                    this.nextPlayer();
-                }
-            }
-        }
     }
 }
 

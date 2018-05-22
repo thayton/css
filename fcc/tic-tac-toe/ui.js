@@ -12,9 +12,6 @@ const UI = {
     chooseSym: document.getElementById('choose-sym'),
     gameBoard: document.getElementById('gameboard'),
 
-    numPlayersPrompt: null,
-    chooseSymPrompt: null,
-
     highlightSquare: function(squareNum) {
         let elem = document.querySelector(`.square${squareNum}`);
         elem.style.background = 'orange';
