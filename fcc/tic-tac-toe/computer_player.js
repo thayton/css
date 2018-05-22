@@ -54,6 +54,5 @@ export class ComputerPlayer {
         } else {
             fillSquare(mySym, myBestMove.squareNum);
         }
-
     }
 }

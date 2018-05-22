@@ -81,18 +81,6 @@ export class Game {
         this.displayStatus(this.players[this.currentPlayer].name + '\'s Turn');
     }
 
-    isComputersTurn() {
-        return this.numPlayers === 1 &&
-            this.currentPlayer === 1; // Computer is always Player 2
-    }
-
-    computersTurn() {
-        this.computerPlayer.takeTurn(); 
-        if (this.gameIsOver() === false) {
-            this.nextPlayer();
-        }        
-    }
-
     registerPlayersMoveHandler() {
         this.ui.grid.onclick = (event) => {
             let elem = event.target;
@@ -113,6 +101,18 @@ export class Game {
         }
     }
     
+    isComputersTurn() {
+        return this.numPlayers === 1 &&
+            this.currentPlayer === 1; // Computer is always Player 2
+    }
+
+    computersTurn() {
+        this.computerPlayer.takeTurn(); 
+        if (this.gameIsOver() === false) {
+            this.nextPlayer();
+        }        
+    }
+
     nextPlayer() {
         this.currentPlayer ^= 1;
     
@@ -127,11 +127,10 @@ export class Game {
 
     // Return true if current player just won the game
     currentPlayerWon() {
-        let i;
-        let s = this.players[this.currentPlayer].sym.repeat(3);
+        let winStr = this.players[this.currentPlayer].sym.repeat(3);
 
-        for (i = 0; i < winningMoves.length; i++) {
-            if (s == getWinningMoveStrings(i)) {
+        for (let i = 0; i < winningMoves.length; i++) {
+            if (winStr == getWinningMoveStrings(i)) {
                 break;
             }
         }
