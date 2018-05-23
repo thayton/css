@@ -63,17 +63,17 @@ export class Game {
     }
     
     startNewGame() {
-        this.currentPlayer = 0;    
+        this.currentPlayer = this.players[0];
         this.computersTurnTimer = null; // clear any old timers?
 
-        for (let i = 0; i < this.grid.length; i++) {
+        for (let i = 0; i < grid.length; i++) {
             this.ui.clearSquare(i);
-            this.grid[i] = '';
+            grid[i] = '';
         }
 
         this.resetScore();        
         this.gameOn = true;
-        this.displayStatus(this.players[this.currentPlayer].name + '\'s Turn');
+        this.displayStatus(this.currentPlayer.name + '\'s Turn');
     }
 
     registerPlayersMoveHandler() {
@@ -83,8 +83,8 @@ export class Game {
                 elem.getAttribute('class')
             )[1];
 
-            if (this.gameOn && !this.isComputersTurn() && this.grid[squareNum] === '') {
-                let sym = this.players[this.currentPlayer].sym;
+            if (this.gameOn && !this.isComputersTurn() && grid[squareNum] === '') {
+                let sym = this.currentPlayer.sym;
 
                 this.ui.fillSquare(squareNum, sym);
                 grid[squareNum] = sym;
@@ -98,7 +98,7 @@ export class Game {
     
     isComputersTurn() {
         return this.numPlayers === 1 &&
-            this.currentPlayer === 1; // Computer is always Player 2
+            this.currentPlayer === this.players[1]; // Computer is always Player 2
     }
 
     computersTurn() {
@@ -109,7 +109,9 @@ export class Game {
     }
 
     nextPlayer() {
-        this.currentPlayer ^= 1;
+        this.currentPlayer = this.currentPlayer === this.players[0]
+            ? this.players[1]
+            : this.players[0];
     
         if (this.numPlayers === 1) {
             this.computersTurnTimer = this.isComputersTurn() ? setTimeout(() => {
@@ -117,12 +119,12 @@ export class Game {
             }, 1500) : null;
         }
 
-        this.displayStatus(this.players[currentPlayer].name + '\'s Turn');
+        this.displayStatus(this.currentPlayer.name + '\'s Turn');
     }
 
     // Return true if current player just won the game
     currentPlayerWon() {
-        let winStr = this.players[this.currentPlayer].sym.repeat(3);
+        let winStr = this.currentPlayer.sym.repeat(3);
 
         for (let i = 0; i < winningMoves.length; i++) {
             if (winStr == getWinningMoveStrings(i)) {
@@ -139,13 +141,13 @@ export class Game {
     }
     
     isStalemate() {
-        return this.findOpenSquare() === -1;
+        return findOpenSquare() === -1;
     }
 
     gameIsOver() {
         if (this.currentPlayerWon()) {
-            this.displayStatus(this.players[this.currentPlayer].name ' wins');
-            this.players[this.currentPlayer].score++;
+            this.displayStatus(this.currentPlayer.name ' wins');
+            this.currentPlayer.score++;
             this.displayScore();
             this.gameOn = false;
             

@@ -29,7 +29,7 @@ export class ComputerPlayer {
 
                     bestMove.movesLeft = 2 - s.length;                
                     bestMove.squareNum = winningMoves[i][
-                        winningMoves[i].findIndex(j => this.grid[j] === '')
+                        winningMoves[i].findIndex(j => grid[j] === '')
                     ];
                 }
             }
