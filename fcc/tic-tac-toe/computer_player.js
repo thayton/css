@@ -1,4 +1,5 @@
 // TODO: https://www.neverstopbuilding.com/blog/2013/12/13/tic-tac-toe-understanding-the-minimax-algorithm13/
+import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from './common';
 
 export class ComputerPlayer {
     constructor(sym, grid, ui) {
@@ -29,7 +30,7 @@ export class ComputerPlayer {
 
                     bestMove.movesLeft = 2 - s.length;                
                     bestMove.squareNum = winningMoves[i][
-                        winningMoves[i].findIndex(j => grid[j] === '')
+                        winningMoves[i].findIndex(j => this.grid[j] === '')
                     ];
                 }
             }

@@ -1,14 +1,9 @@
-import ComputerPlayer from './computer_player';
+import ComputerPlayer from './computer_players';
+import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from './common';
 
 export class Game {
     constructor(ui) {
         this.ui = ui;
-        this.grid = [
-            '', '', '', // 0 1 2
-            '', '', '', // 3 4 5
-            '', '', ''  // 6 7 8
-        ];
-
         this.players = [
             {
                 sym: null,
@@ -142,9 +137,9 @@ export class Game {
     
         return false;
     }
-
+    
     isStalemate() {
-        return findOpenSquare() === -1;
+        return this.findOpenSquare() === -1;
     }
 
     gameIsOver() {
