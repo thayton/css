@@ -1,5 +1,6 @@
-import ComputerPlayer from './computer_players';
-import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from './common';
+import ComputerPlayer from 'computer_player';
+import { grid, findOpenSquare } from 'grid';
+import { winningMoves, getWinningMoveStrings } from 'winning_moves';
 
 export class Game {
     constructor(ui) {
@@ -49,7 +50,7 @@ export class Game {
                 this.players[1].sym = players[0].sym === 'x' ? 'o': 'x';
 
                 if (this.numPlayers === 1) {
-                    this.computerPlayer = new ComputerPlayer(this.players[1].sym, this.grid, this.ui);
+                    this.computerPlayer = new ComputerPlayer(this.players[1].sym, this.ui);
                     this.computersTurnTimer = null;            
                 }
                 
@@ -87,7 +88,7 @@ export class Game {
                 let sym = this.players[this.currentPlayer].sym;
 
                 this.ui.fillSquare(squareNum, sym);
-                this.grid[squareNum] = sym;
+                grid[squareNum] = sym;
 
                 if (!this.gameIsOver()) {
                     this.nextPlayer();

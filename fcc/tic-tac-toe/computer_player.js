@@ -1,14 +1,14 @@
-// TODO: https://www.neverstopbuilding.com/blog/2013/12/13/tic-tac-toe-understanding-the-minimax-algorithm13/
-import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from './common';
+import { grid, findOpenSquare } from './grid';
+import { winningMoves, getWinningMoveStrings } from './winning_moves';
 
 export class ComputerPlayer {
-    constructor(sym, grid, ui) {
+    constructor(sym, ui) {
         this.sym = sym;
-        this.grid = grid;
         this.ui = ui;
     }
 
     // Examine the board and see if we can get one move closer to winning
+    // TODO: https://www.neverstopbuilding.com/blog/2013/12/13/tic-tac-toe-understanding-the-minimax-algorithm13/    
     getBestMove(sym) {
         let length = 0;
         let regexp = new RegExp(sym, 'g');
@@ -49,11 +49,15 @@ export class ComputerPlayer {
         let myBestMove = this.getBestMove(this.sym);
         let theirSym = this.sym === 'x' ? 'o';
         let theirBestMove = this.getBestMove(theirSym);
-
+        let squareNum;
+        
         if (theirBestMove.movesLeft === 0 && myBestMove.movesLeft > 0) {
-            fillSquare(mySym, theirBestMove.squareNum);
+            squareNum = theirBestMove.squareNum;
         } else {
-            fillSquare(mySym, myBestMove.squareNum);
+            squareNum = myBestMove.squareNum;
         }
+
+        this.ui.fillSquare(squareNum, this.sym);
+        grid[squareNum] = this.sym;
     }
 }
