@@ -1,5 +1,4 @@
-import { grid, findOpenSquare } from './grid';
-import { winningMoves, getWinningMoveStrings } from './winning_moves';
+import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from 'grid';
 
 export class ComputerPlayer {
     constructor(sym, ui) {

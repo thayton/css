@@ -1,6 +1,5 @@
 import ComputerPlayer from 'computer_player';
-import { grid, findOpenSquare } from 'grid';
-import { winningMoves, getWinningMoveStrings } from 'winning_moves';
+import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from 'grid';
 
 export class Game {
     constructor(ui) {
