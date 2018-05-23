@@ -151,9 +151,9 @@ class Game {
                 this.numPlayers = parseInt(event.target.dataset.choice);
 
                 if (this.numPlayers === 1) {
-                    UI.player2Name.innerText = players[1].name = 'Computer';
+                    UI.player2Name.innerText = this.players[1].name = 'Computer';
                 } else {
-                    UI.player2Name.innerText = players[1].name = 'Player 2';
+                    UI.player2Name.innerText = this.players[1].name = 'Player 2';
                 }
         
                 UI.chooseNumPlayers.style.display = 'none';
@@ -169,7 +169,7 @@ class Game {
                 event.target.innerText === 'O') {
 
                 this.players[0].sym = event.target.innerText.toLowerCase();
-                this.players[1].sym = players[0].sym === 'x' ? 'o': 'x';
+                this.players[1].sym = this.players[0].sym === 'x' ? 'o': 'x';
 
                 if (this.numPlayers === 1) {
                     this.computerPlayer = new ComputerPlayer(this.players[1].sym);
@@ -208,9 +208,9 @@ class Game {
     registerPlayersMoveHandler() {
         UI.gameBoard.onclick = (event) => {
             let elem = event.target;
-            let squareNum = /\bsquare(\d+)\b/.exec(
-                elem.getAttribute('class')
-            )[1];
+            let squareNum = parseInt(
+                    /\bsquare(\d+)\b/.exec( elem.getAttribute('class') )[1]
+            );
 
             if (this.gameOn && !this.isComputersTurn() && grid[squareNum] === '') {
                 let sym = this.currentPlayer.sym;
