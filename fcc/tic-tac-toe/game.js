@@ -1,19 +1,19 @@
+import UI from 'UI';
 import ComputerPlayer from 'computer_player';
 import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from 'grid';
 
-export class Game {
-    constructor(ui) {
-        this.ui = ui;
+class Game {
+    constructor() {
         this.players = [
             {
-                sym: null,
-                score: 0,
-                name: 'Player 1'
+                name: 'Player 1',
+                score: 0, 
+                sym: null
             },
             {
+                name: 'Player 2',
                 sym: null,
-                score: 0,
-                name: 'Player 2'
+                score: 0
             }
         ];
 
@@ -21,27 +21,27 @@ export class Game {
     }
 
     chooseNumPlayers() {
-        this.ui.chooseNumPlayers.onclick = (event) => {
+        UI.chooseNumPlayers.onclick = (event) => {
             if (event.target.dataset.choice === '1' ||
                 event.target.dataset.choice === '2') {
         
                 this.numPlayers = parseInt(event.target.dataset.choice);
 
                 if (this.numPlayers === 1) {
-                    this.ui.player2Name.innerText = players[1].name = 'Computer';
+                    UI.player2Name.innerText = players[1].name = 'Computer';
                 } else {
-                    this.ui.player2Name.innerText = players[1].name = 'Player 2';
+                    UI.player2Name.innerText = players[1].name = 'Player 2';
                 }
         
-                this.ui.chooseNumPlayers.style.display = 'none';
-                this.ui.chooseSym.style.display = 'block';
-                this.ui.gameboard.style.display = 'none';
+                UI.chooseNumPlayers.style.display = 'none';
+                UI.chooseSym.style.display = 'block';
+                UI.gameboard.style.display = 'none';
             }
         }
     }
 
     chooseSymbol() {
-        this.ui.chooseSym.onclick = (event) => {
+        UI.chooseSym.onclick = (event) => {
             if (event.target.innerText === 'X' ||
                 event.target.innerText === 'O') {
 
@@ -49,13 +49,13 @@ export class Game {
                 this.players[1].sym = players[0].sym === 'x' ? 'o': 'x';
 
                 if (this.numPlayers === 1) {
-                    this.computerPlayer = new ComputerPlayer(this.players[1].sym, this.ui);
+                    this.computerPlayer = new ComputerPlayer(this.players[1].sym);
                     this.computersTurnTimer = null;            
                 }
                 
-                this.ui.chooseNumPlayers.style.display = 'none';
-                this.ui.chooseSym.style.display = 'none';
-                this.ui.gameboard.style.display = 'block';
+                UI.chooseNumPlayers.style.display = 'none';
+                UI.chooseSym.style.display = 'none';
+                UI.gameboard.style.display = 'block';
 
                 this.startNewGame();
             }
@@ -67,7 +67,7 @@ export class Game {
         this.computersTurnTimer = null; // clear any old timers?
 
         for (let i = 0; i < grid.length; i++) {
-            this.ui.clearSquare(i);
+            UI.clearSquare(i);
             grid[i] = '';
         }
 
@@ -77,7 +77,7 @@ export class Game {
     }
 
     registerPlayersMoveHandler() {
-        this.ui.grid.onclick = (event) => {
+        UI.grid.onclick = (event) => {
             let elem = event.target;
             let squareNum = /\bsquare(\d+)\b/.exec(
                 elem.getAttribute('class')
@@ -86,7 +86,7 @@ export class Game {
             if (this.gameOn && !this.isComputersTurn() && grid[squareNum] === '') {
                 let sym = this.currentPlayer.sym;
 
-                this.ui.fillSquare(squareNum, sym);
+                UI.fillSquare(squareNum, sym);
                 grid[squareNum] = sym;
 
                 if (!this.gameIsOver()) {
@@ -167,12 +167,12 @@ export class Game {
     }
 
     displayStatus(status) {
-        this.ui.status.innerText = status;
+        UI.status.innerText = status;
     }
 
     displayScore() {
-        this.ui.player1Score.innerText = this.players[0].score;
-        this.ui.player2Score.innerText = this.players[1].score;
+        UI.player1Score.innerText = this.players[0].score;
+        UI.player2Score.innerText = this.players[1].score;
     }
 
     resetScore() {
@@ -183,3 +183,4 @@ export class Game {
     }
 }
 
+export default Game;

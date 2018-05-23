@@ -30,3 +30,5 @@ const UI = {
         elem.style.background = 'none';
     },
 };
+
+export default UI;

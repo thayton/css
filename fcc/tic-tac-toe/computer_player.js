@@ -1,9 +1,9 @@
+import UI from 'UI';
 import { grid, findOpenSquare, winningMoves, getWinningMoveStrings } from 'grid';
 
-export class ComputerPlayer {
-    constructor(sym, ui) {
+class ComputerPlayer {
+    constructor(sym) {
         this.sym = sym;
-        this.ui = ui;
     }
 
     // Examine the board and see if we can get one move closer to winning
@@ -56,7 +56,9 @@ export class ComputerPlayer {
             squareNum = myBestMove.squareNum;
         }
 
-        this.ui.fillSquare(squareNum, this.sym);
+        UI.fillSquare(squareNum, this.sym);
         grid[squareNum] = this.sym;
     }
 }
+
+export default ComputerPlayer;
