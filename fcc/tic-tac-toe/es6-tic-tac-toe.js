@@ -29,6 +29,13 @@ const getWinningMoveStrings = (i) => {
     ).join('');
 };
 
+let highlightWinningMove = (winningMove) => {
+    winningMoves[winningMove].forEach((i) => {
+        let elem = document.querySelector(`.square${i}`);
+        elem.style.background = 'orange';
+    });
+};
+
 //--------------------------------------------------------------------
 const UI = {
     player1Name: document.querySelector('.player1 .name'),
@@ -254,19 +261,14 @@ class Game {
     // Return true if current player just won the game
     currentPlayerWon() {
         let winStr = this.currentPlayer.sym.repeat(3);
+        let winMove = winningMoves.findIndex((_,j) => getWinningMoveStrings(j) === winStr);
 
-        for (let i = 0; i < winningMoves.length; i++) {
-            if (winStr == getWinningMoveStrings(i)) {
-                break;
-            }
-        }
-
-        if (i < winningMoves.length) {
-            highlightWinningMove(i);
+        if (winMove !== -1) {
+            highlightWinningMove(winMove);
             return true;
+        } else {
+            return false;            
         }
-    
-        return false;
     }
     
     isStalemate() {
