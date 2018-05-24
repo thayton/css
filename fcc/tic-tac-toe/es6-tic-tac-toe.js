@@ -277,7 +277,7 @@ class Game {
 
     gameIsOver() {
         if (this.currentPlayerWon()) {
-            this.displayStatus(this.currentPlayer.name, ' wins');
+            this.displayStatus(this.currentPlayer.name + ' wins');
             this.currentPlayer.score++;
             this.displayScore();
             this.gameOn = false;
