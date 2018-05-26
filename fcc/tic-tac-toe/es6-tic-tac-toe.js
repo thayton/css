@@ -46,10 +46,11 @@ const UI = {
 
     reset: document.querySelector('.reset'),    
     status: document.querySelector('.prompt .status'),
-    
+
     chooseNumPlayers: document.getElementById('choose-num-players'),
     chooseSym: document.getElementById('choose-sym'),
     gameBoard: document.getElementById('gameboard'),
+    grid: document.getElementById('grid'),    
 
     highlightSquare: function(squareNum) {
         let elem = document.querySelector(`.square${squareNum}`);
@@ -213,7 +214,7 @@ class Game {
     }
 
     registerPlayersMoveHandler() {
-        UI.gameBoard.onclick = (event) => {
+        UI.grid.onclick = (event) => {
             let elem = event.target;
             let squareNum = parseInt(
                     /\bsquare(\d+)\b/.exec( elem.getAttribute('class') )[1]
