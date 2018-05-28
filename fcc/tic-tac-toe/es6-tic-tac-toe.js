@@ -198,7 +198,13 @@ class Game {
         UI.chooseSym.style.display = 'none';
         UI.gameBoard.style.display = 'none';
     }
-    
+
+    registerResetHandler() {
+        UI.reset.onclick = (event) => {
+            this.startNewGame();
+        };
+    }
+
     startRound() {
         this.currentPlayer = this.players[0];
         this.computersTurnTimer = null; // clear any old timers?
@@ -322,4 +328,5 @@ document.body.onload = () => {
     game.chooseNumPlayers();
     game.chooseSymbol();
     game.registerPlayersMoveHandler();
+    game.registerResetHandler();
 };
