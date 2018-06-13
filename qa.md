@@ -50,5 +50,9 @@
 
 25. Given the following HTML ```<p>Some <em>emphasized</em> text</p>``` How many block boxes are generated? How many inline boxes are generated? Which of the inline boxes are anonymous and why?
 
+26. What CSS property is used to set the positioning scheme?
 
+27. (T/F) Absolutely positioned boxes are taken out of the normal flow. This means they have no impact on the layout of later siblings.
+
+28. (T/F) Absolutely positioned boxes have margins, but they do not collapse with other margins.
 
