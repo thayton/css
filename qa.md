@@ -1,6 +1,6 @@
 - What are the different positioning schemes?
 
-Normal Flow, Floats and Absolute positioning. Normal flow includes block formatting of block-level boxes, inline formatting of inline-level boxes, and relative positioning of block-level and inline-level boxes.
+Normal Flow, float and absolute positioning. Normal flow includes block formatting of block-level boxes, inline formatting of inline-level boxes, and relative positioning of block-level and inline-level boxes.
 
 - What is a containing block?
 
@@ -24,49 +24,90 @@ The containing block of an element is defined as follows:
 
 - (T/F) Each block is given a position with respect to its containing block.
 
+True.
+
+- (T/F) A block is confined by its containing block.
+
+False. The block may overflow its containing block.
+
 - What CSS property specifies a box's type?
 
-5. (T/F) Every element on a page is a rectangular box.
+The *display* property specifies a box's type.
 
-6. What is the difference between paged media and continuous media?
+- (T/F) Every element on a page is a rectangular box.
 
-7. The following values of the 'display' property make an element block-level:
+True. Each element in the document tree generates zero or more boxes according to the box model.
+
+- What is the difference between paged media and continuous media?
+
+- The following values of the 'display' property make an element block-level:
    _____________, _____________, and _____________.
 
-8. Block-level boxes are boxes that participate in a _____________ formatting context.
+block, list-item, table
 
-9. Each block-level element generates a _____________ block-level box that contains
-   descendent boxes and generated content.
+- Block-level boxes are boxes that participate in a _____________ formatting context.
 
-10. (T/F) A block-level box is also a container box.
+block
 
-11. (T/F) A block container box either contains block-level boxes or inline-level boxes but not both.
+- Each block-level element generates a _____________ block-level box that contains descendent boxes and generated content.
 
-12. (T/F) Not all block container boxes are block-level boxes.
+principal
 
-13. In the visual formatting model, each element in the document tree generates zero or more ____________ according to the         ______________ model.
+- (T/F) A block-level box is also a container box.
 
-14. The containing block in which the root element lives is a rectangle called the _______________.
+True.
 
-15. What is a replaced element?
+- (T/F) A block container box either contains block-level boxes or inline-level boxes but not both.
 
-16. Replaced elements often have _____________ dimensions.
+True
 
-17. (T/F) A "!important" declaration takes precedence over a normal declaration.
+- What is a *block container box*?
 
-18. List the different parts of a selector's specificity: a-b-c-d
+A block container box either contains only block-level boxes or establishes an inline formatting context and thus contains only inline-level boxes.
 
-19. Give two examples of block container boxes that are NOT block-level boxes.
+- (T/F) Not all block container boxes are block-level boxes.
+ 
+True. Non-replaced inline blocks and non-replaced table cells are block containers but not block-level boxes.
 
-20. What are block boxes?
+- In the visual formatting model, each element in the document tree generates zero or more ____________ according to the ______________ model.
 
-21. (T/F) The properties of anonymous boxes are inherited from the enclosing non-anonymous box.
+boxes, box
 
-22. What are inline-level elements?
+- The containing block in which the root element lives is a rectangle called the _______________.
 
-23. What values of the 'display' property make an element inline-level?
+Initial containing block.
 
-24. What is an inline box?
+- What is a replaced element?
+
+- Replaced elements often have _____________ dimensions.
+
+- (T/F) A "!important" declaration takes precedence over a normal declaration.
+
+True.
+
+- List the different parts of a selector's specificity: a-b-c-d
+
+- Give two examples of block container boxes that are NOT block-level boxes.
+
+Non-replaced inline blocks, non-replaced table cells.
+
+- What are block boxes?
+
+Block boxes are block-level boxes that are also block containers.
+
+- (T/F) The properties of anonymous boxes are inherited from the enclosing non-anonymous box.
+
+True.
+
+- What are inline-level elements?
+
+*Inline-level* elements are those elements of the source document that do not form new blocks of content; the content is distributed in lines.
+
+- What values of the 'display' property make an element inline-level?
+
+The following values of the *display* property make an element inline-level: 'inline', 'inline-table', and 'inline-block'
+
+- What is an inline box?
 
 25. Given the following HTML ```<p>Some <em>emphasized</em> text</p>``` How many block boxes are generated? How many inline boxes are generated? Which of the inline boxes are anonymous and why?
 
