@@ -17,9 +17,7 @@ The containing block of an element is defined as follows:
   3. If the element has 'position: fixed', the containing block is established by the viewport in the case of continuous media or the page area in the case of paged media.
 
   4. If the element has 'position: absolute', the containing block is established by the nearest ancestor with a 'position' of 'absolute', 'relative' or 'fixed', in the following way:
-  
     1. In the case that the ancestor is an inline element, the containing block is the bounding box around the padding boxes of the first and the last inline boxes generated for that element. In CSS 2.1, if the inline element is split across multiple lines, the containing block is undefined.
-    
     2. Otherwise, the containing block is formed by the padding edge of the ancestor.
 
   If there is no such ancestor, the containing block is the initial containing block.
