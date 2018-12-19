@@ -1,4 +1,6 @@
-1. What are the different positioning schemes?
+- What are the different positioning schemes?
+
+Normal Flow, Floats and Absolute positioning. Normal flow includes block formatting of block-level boxes, inline formatting of inline-level boxes, and relative positioning of block-level and inline-level boxes.
 
 2. What is a block's containing block?
 
