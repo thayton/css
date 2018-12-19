@@ -165,23 +165,69 @@ No, they do not collapse with other margins.
 
 Its containing block.
 
-29. An element is said to be 'positioned' if its 'position' property has a value other than ___________.
+- A 'fixed' position box has its position calculated according to the ________ model.
 
-30. Boxes in the normal flow belong to a formatting context, which may be _______________ or ____________, but not both simultaneously.
+'absolute'
 
-31. In a block formatting context, how are boxes laid out?
+- A 'fixed' position box has its position determined with respect to what?
 
-32. In a block formatting context, the vertical distance between two sibling boxes is determined by the ____________ properties.
+For non print media, it's fixed with respect to the viewport and does not move when scrolled.
 
-33. (T/F) When an element is floated, it will flow all the way to the edge of its parent element.
+For print media, the box is rendered on every page and is fixed with respect to the page box.
+
+- An element is said to be 'positioned' if its 'position' property has a value other than ___________.
+
+static
+
+- Positioned elements generate ____________ boxes.
+
+positioned
+
+- Boxes in the normal flow belong to a formatting context, which may be _______________ or ____________, but not both simultaneously.
+
+block, inline
+
+- In a block formatting context, how are boxes laid out?
+
+In a block formatting context, boxes are laid out one after the other, vertically, beginning at the top of the containing block.
+
+- In a block formatting context, the vertical distance between two sibling boxes is determined by the ____________ properties.
+
+margin
+
+
+- Vertical margins between adjacent block-level boxes in a block formatting context _____________
+
+collapse
+
+- In a block formatting context, each box's left outer edge touches what?
+
+The left edge of the containing block. 
+
+- In the presence of floats, a box's line boxes may due what?
+
+shrink
+
+- What happens if a block establishes a new block formatting context in the presence of floats?
+
+The box itself may become narrower due to floats.
+
+- How is a new block formatting context established?
+
+
+- (T/F) When an element is floated, it will flow all the way to the edge of its parent element.
 
 34. When an element is floated, the width of the element defaults to be the width of ______________.
 
-35. (T/F) Veritical margins between adjacent block-level boxes in a block formatting context collapse.
+- (T/F) Veritical margins between adjacent block-level boxes in a block formatting context collapse.
 
-36. In an inline formatting context, how are boxes laid out?
+True
 
-37. The rectangular area that contains the boxes that form a line is called a ______________ box.
+- In an inline formatting context, how are boxes laid out?
+
+- The rectangular area that contains the boxes that form a line is called a ______________ box.
+
+line
 
 38. (T/F) A line box is always tall enough for all of the boxes it contains.
 
